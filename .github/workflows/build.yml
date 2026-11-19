@@ -186,13 +186,9 @@ jobs:
         run: |
           rm -f ProjectXYZ-unsigned.ipa
 
-          cd Payload
-
           zip -r \
-            "../ProjectXYZ-unsigned.ipa" \
-            App.app
-
-          cd ..
+            "ProjectXYZ-unsigned.ipa" \
+            Payload
 
           echo "=== Created IPA ==="
           ls -lh ProjectXYZ-unsigned.ipa
@@ -208,8 +204,8 @@ jobs:
           echo "=== IPA contents ==="
           unzip -l ProjectXYZ-unsigned.ipa
 
-          echo "=== Checking Payload ==="
-          unzip -l ProjectXYZ-unsigned.ipa | grep "Payload/"
+          echo "=== Checking Payload/App.app ==="
+          unzip -l ProjectXYZ-unsigned.ipa | grep "Payload/App.app/"
 
       - name: Upload unsigned IPA
         uses: actions/upload-artifact@v4
