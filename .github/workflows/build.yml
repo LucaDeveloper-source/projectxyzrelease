@@ -63,6 +63,12 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Show versions
+        run: |
+          node --version
+          npm --version
+          java -version
+
       - name: Install dependencies
         run: npm install
 
@@ -75,11 +81,25 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Build Android APK
+      - name: Check Android project
         run: |
-          chmod +x android/gradlew
-          cd android
-          ./gradlew assembleDebug
+          echo "=== Android project ==="
+          ls -la android
+          echo "=== Gradle wrapper ==="
+          ls -la android/gradlew
+
+      - name: Build Android APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace --info
+
+      - name: Check APK
+        run: |
+          echo "=== APK files ==="
+          find android -type f -name "*.apk" -print
+
+          test -f android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Copy APK
         run: |
@@ -122,9 +142,9 @@ jobs:
 
       - name: Check iOS project
         run: |
-          echo "=== Checking iOS project ==="
+          echo "=== iOS project ==="
+          find ios -maxdepth 3 -type f | sort
           test -d "ios/App/App.xcworkspace"
-          echo "App.xcworkspace found"
 
       - name: Build unsigned iOS app
         run: |
@@ -142,14 +162,18 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             build
 
-      - name: Check unsigned App
+      - name: Check App.app
         run: |
           echo "=== Searching for App.app ==="
-          find build -type d -name "App.app" -print
+
+          find build \
+            -type d \
+            -name "App.app" \
+            -print
 
           test -d "build/Build/Products/Release-iphoneos/App.app"
 
-      - name: Package unsigned IPA
+      - name: Create Payload
         run: |
           rm -rf Payload
           mkdir -p Payload
@@ -158,23 +182,34 @@ jobs:
             "build/Build/Products/Release-iphoneos/App.app" \
             "Payload/App.app"
 
+      - name: Create unsigned IPA
+        run: |
           rm -f ProjectXYZ-unsigned.ipa
 
           cd Payload
-          zip -r "../ProjectXYZ-unsigned.ipa" App.app
+
+          zip -r \
+            "../ProjectXYZ-unsigned.ipa" \
+            App.app
 
           cd ..
 
           echo "=== Created IPA ==="
           ls -lh ProjectXYZ-unsigned.ipa
 
-      - name: Verify IPA
+      - name: Verify unsigned IPA
         run: |
-          echo "=== IPA CONTENTS ==="
+          echo "=== IPA exists ==="
+          test -f ProjectXYZ-unsigned.ipa
+
+          echo "=== IPA size ==="
+          ls -lh ProjectXYZ-unsigned.ipa
+
+          echo "=== IPA contents ==="
           unzip -l ProjectXYZ-unsigned.ipa
 
-          echo "=== Checking Payload/App.app ==="
-          unzip -l ProjectXYZ-unsigned.ipa | grep "Payload/App.app/"
+          echo "=== Checking Payload ==="
+          unzip -l ProjectXYZ-unsigned.ipa | grep "Payload/"
 
       - name: Upload unsigned IPA
         uses: actions/upload-artifact@v4
