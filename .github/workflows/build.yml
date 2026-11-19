@@ -43,6 +43,42 @@ jobs:
 
 
   # =========================
+  # MACOS
+  # =========================
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build macOS app
+        run: npm run build:mac
+
+      - name: Show macOS build files
+        run: |
+          echo "=== DIST CONTENTS ==="
+          find dist -maxdepth 2 -type f -print
+
+      - name: Upload macOS build
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: |
+            dist/*.dmg
+            dist/*.zip
+          if-no-files-found: error
+
+
+  # =========================
   # ANDROID
   # =========================
   android:
@@ -219,7 +255,7 @@ jobs:
   # RELEASE
   # =========================
   release:
-    needs: [windows, android, ios]
+    needs: [windows, macos, android, ios]
 
     runs-on: ubuntu-latest
 
