@@ -1,0 +1,10 @@
+{
+  "appId": "com.luca.projectxyz",
+  "appName": "Project XYZ",
+  "webDir": "www",
+  "server": {
+    "url": "https://projectxyzl.lovable.app/",
+    "cleartext": false
+  },
+  "backgroundColor": "#0a0a0a"
+}
