@@ -7,7 +7,8 @@
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder --win --publish never"
+    "build:win": "electron-builder --win --publish never",
+    "build:mac": "electron-builder --mac --publish never"
   },
   "devDependencies": {
     "@capacitor/android": "^6.2.0",
@@ -45,6 +46,17 @@
     },
     "portable": {
       "artifactName": "ProjectXYZ-Portable-${version}.exe"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.png",
+      "identity": null
+    },
+    "dmg": {
+      "artifactName": "ProjectXYZ-${version}.dmg"
     }
   }
 }
