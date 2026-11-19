@@ -46,7 +46,7 @@ jobs:
   # MACOS INTEL
   # =========================
   macos:
-    runs-on: macos-13
+    runs-on: macos-15-intel
 
     steps:
       - name: Checkout
@@ -56,9 +56,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Install dependencies
-        run: npm install
 
       - name: Show macOS build environment
         run: |
@@ -71,6 +68,9 @@ jobs:
           echo "=== npm ==="
           npm --version
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Build macOS Intel app
         run: npm run build:mac
 
@@ -78,6 +78,10 @@ jobs:
         run: |
           echo "=== DIST CONTENTS ==="
           find dist -maxdepth 2 -type f -print
+
+      - name: Verify macOS DMG
+        run: |
+          test -f dist/ProjectXYZ-1.0.0-Intel.dmg
 
       - name: Upload macOS Intel build
         uses: actions/upload-artifact@v4
@@ -164,7 +168,7 @@ jobs:
   # IOS - UNSIGNED
   # =========================
   ios:
-    runs-on: macos-latest
+    runs-on: macos-15-intel
 
     steps:
       - name: Checkout
