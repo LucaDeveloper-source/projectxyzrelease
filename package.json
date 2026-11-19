@@ -15,9 +15,9 @@
     "@capacitor/cli": "^6.2.0",
     "@capacitor/core": "^6.2.0",
     "@capacitor/ios": "^6.2.0",
+    "@capacitor/assets": "^3.0.5",
     "electron": "^33.0.0",
-    "electron-builder": "^25.1.8",
-    "@capacitor/assets": "^3.0.5"
+    "electron-builder": "^25.1.8"
   },
   "build": {
     "appId": "com.luca.projectxyz",
@@ -52,11 +52,14 @@
         "dmg",
         "zip"
       ],
+      "arch": [
+        "x64"
+      ],
       "icon": "build/icon.png",
       "identity": null
     },
     "dmg": {
-      "artifactName": "ProjectXYZ-${version}.dmg"
+      "artifactName": "ProjectXYZ-${version}-Intel.dmg"
     }
   }
 }
