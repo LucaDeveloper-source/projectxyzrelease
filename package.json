@@ -52,11 +52,9 @@
         "dmg",
         "zip"
       ],
-      "arch": [
-        "x64"
-      ],
       "icon": "build/icon.png",
-      "identity": null
+      "identity": null,
+      "defaultArch": "x64"
     },
     "dmg": {
       "artifactName": "ProjectXYZ-${version}-Intel.dmg"
